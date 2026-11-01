@@ -41,7 +41,7 @@ export async function closeDbs() {
 export async function createDb(url = process.env.DATABASE_URL, { migrate = true } = {}): Promise<Db> {
   if (url) {
     // prepare: false is required for Supabase's transaction pooler.
-    const client = postgres(url, { prepare: false });
+    const client = postgres(url, { prepare: false, onnotice: () => {} });
     closers.push(() => client.end());
     const db = drizzlePostgres(client, { schema });
     if (migrate) await migratePostgres(db, { migrationsFolder: migrationsFolder() });

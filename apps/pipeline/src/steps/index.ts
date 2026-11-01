@@ -1,25 +1,17 @@
-import { ingest } from './ingest';
-import { rank } from './rank';
-import { plan } from './plan';
-import { write } from './write';
-import { voice } from './voice';
-import { render } from './render';
-import { publish } from './publish';
-import { count } from './count';
-import { doctor } from './doctor';
-
 type Args = Record<string, string>;
 
+// Steps load lazily: the narration library installs process-wide crash handlers that
+// hide real errors, so only the voice step should pull it in.
 export const steps = {
-  ingest,
-  rank,
-  plan,
-  write,
-  voice,
-  render,
-  publish,
-  count,
-  doctor,
+  ingest: async (args: Args) => (await import('./ingest')).ingest(args),
+  rank: async (args: Args) => (await import('./rank')).rank(args),
+  plan: async (args: Args) => (await import('./plan')).plan(args),
+  write: async (args: Args) => (await import('./write')).write(args),
+  voice: async (args: Args) => (await import('./voice')).voice(args),
+  render: async (args: Args) => (await import('./render')).render(args),
+  publish: async (args: Args) => (await import('./publish')).publish(args),
+  count: async (args: Args) => (await import('./count')).count(args),
+  doctor: async () => (await import('./doctor')).doctor(),
   'run-daily': async (args: Args) => {
     for (const s of ['ingest', 'rank', 'plan', 'write', 'voice', 'render', 'publish'] as const) {
       console.log(`▶ ${s}`);

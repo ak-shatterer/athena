@@ -22,7 +22,7 @@ export async function rank(args: Record<string, string>) {
         .select()
         .from(articles)
         .where(
-          and(eq(articles.category, category.id), gte(sql`coalesce(${articles.publishedAt}, ${articles.fetchedAt})`, since)),
+          and(eq(articles.category, category.id), gte(sql`coalesce(${articles.publishedAt}, ${articles.fetchedAt})`, since.toISOString())),
         )
     ).filter((a) => !isNoise(a.title));
     if (rows.length === 0) {
