@@ -1,0 +1,27 @@
+{
+  "name": "@athena/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3030",
+    "build": "next build",
+    "start": "next start -p 3030",
+    "typecheck": "tsc -p . --noEmit"
+  },
+  "dependencies": {
+    "@athena/config": "workspace:*",
+    "@athena/db": "workspace:*",
+    "@athena/shared": "workspace:*",
+    "lucide-react": "^0.460.0",
+    "next": "16.4.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tailwindcss": "4.3.3"
+  }
+}

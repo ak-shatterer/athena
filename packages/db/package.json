@@ -1,0 +1,22 @@
+{
+  "name": "@athena/db",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "push": "drizzle-kit push",
+    "generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "@athena/shared": "workspace:*",
+    "@electric-sql/pglite": "^0.5.14",
+    "drizzle-orm": "^0.38.0",
+    "postgres": "^3.4.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.30.0"
+  }
+}

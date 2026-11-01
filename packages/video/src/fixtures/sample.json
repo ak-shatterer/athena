@@ -1,0 +1,229 @@
+{
+ "lesson": {
+  "id": "60b756ee-e6f8-40a4-816a-d4a871254e18",
+  "date": "2026-11-01",
+  "category": "football",
+  "title": "Why one red card can lose a match",
+  "level": "beginner",
+  "kind": "daily",
+  "concept": {
+   "slug": "red-cards",
+   "name": "Red cards and playing with 10 men",
+   "prerequisites": []
+  },
+  "story": {
+   "headline": "Tottenham beat 10-man Crystal Palace 2-0",
+   "summary": "Crystal Palace's Jean-Philippe Mateta was shown an early red card and Tottenham won 2-0, their third Premier League win in a row.",
+   "sources": [
+    {
+     "title": "Spurs resurgence continues with win over 10-man Palace",
+     "url": "https://www.espn.com/soccer/report/_/gameId/401878761",
+     "publisher": "ESPN"
+    },
+    {
+     "title": "Spurs revival continues with victory over 10-man Crystal Palace",
+     "url": "https://www.bbc.co.uk/sport/football/videos/cxvgdrg33m72o?at_medium=RSS&at_campaign=rss",
+     "publisher": "BBC Sport"
+    },
+    {
+     "title": "Sage looking for solutions to Palace form",
+     "url": "https://www.bbc.co.uk/sport/football/videos/c6r7yx55n3gjo?at_medium=RSS&at_campaign=rss",
+     "publisher": "BBC Sport"
+    }
+   ]
+  },
+  "scenes": [
+   {
+    "id": "s1",
+    "narration": "Crystal Palace just lost two-nil at Tottenham, and the game turned early, when one of their players was shown a red card. So what does a red card actually do?",
+    "onScreenText": "One card changed the game",
+    "visual": {
+     "type": "headline",
+     "publisher": "BBC Sport",
+     "text": "Spurs revival continues with victory over 10-man Crystal Palace"
+    }
+   },
+   {
+    "id": "s2",
+    "narration": "In football, the referee can show two cards. A yellow card is a warning. A red card means the player is sent off, straight away, for the rest of the match.",
+    "onScreenText": "Yellow warns. Red removes.",
+    "visual": {
+     "type": "kinetic",
+     "lines": [
+      "Yellow: a warning",
+      "Red: you're off"
+     ]
+    }
+   },
+   {
+    "id": "s3",
+    "narration": "There are two ways to get a red card. A really serious foul, like a dangerous tackle, is a straight red. Or two yellow cards in the same game add up to a red.",
+    "onScreenText": "Two yellows make a red",
+    "visual": {
+     "type": "flow",
+     "nodes": [
+      {
+       "id": "y1",
+       "label": "Yellow card",
+       "icon": "square"
+      },
+      {
+       "id": "y2",
+       "label": "Second yellow",
+       "icon": "square"
+      },
+      {
+       "id": "red",
+       "label": "Red card",
+       "icon": "square"
+      },
+      {
+       "id": "off",
+       "label": "Sent off",
+       "icon": "log-out"
+      }
+     ],
+     "edges": [
+      {
+       "from": "y1",
+       "to": "y2",
+       "label": "another foul"
+      },
+      {
+       "from": "y2",
+       "to": "red",
+       "label": "equals"
+      },
+      {
+       "from": "red",
+       "to": "off",
+       "label": "means"
+      }
+     ]
+    }
+   },
+   {
+    "id": "s4",
+    "narration": "And here's the key part. Nobody can come on to replace that player, so the team plays the rest of the game with ten people instead of eleven.",
+    "onScreenText": "No one replaces them",
+    "visual": {
+     "type": "kinetic",
+     "lines": [
+      "No replacement",
+      "11 players → 10"
+     ]
+    }
+   },
+   {
+    "id": "s5",
+    "narration": "Imagine a group project where one teammate walks out, but the workload stays the same. Everyone else has to run more, cover more space and get tired faster.",
+    "onScreenText": "Same work, fewer people",
+    "visual": {
+     "type": "analogy",
+     "left": {
+      "icon": "users",
+      "label": "11 players"
+     },
+     "right": {
+      "icon": "user-minus",
+      "label": "10 players"
+     },
+     "relation": "Same pitch, one less player"
+    }
+   },
+   {
+    "id": "s6",
+    "narration": "That's what happened to Palace. Jean-Philippe Mateta was shown an early red card, so his team had to play a player short for a long time.",
+    "onScreenText": "Palace down to ten",
+    "visual": {
+     "type": "headline",
+     "publisher": "BBC Sport",
+     "text": "Jean-Philippe Mateta was shown an early red card"
+    }
+   },
+   {
+    "id": "s7",
+    "narration": "Tottenham won two-nil, their third Premier League win in a row for the first time in twenty months. For Palace, it was a third straight league defeat, and more pressure on manager Pierre Sage.",
+    "onScreenText": "Pressure grows on Palace",
+    "visual": {
+     "type": "kinetic",
+     "lines": [
+      "Tottenham 2-0 Palace",
+      "3 wins in a row for Spurs",
+      "3 defeats in a row for Palace"
+     ]
+    }
+   },
+   {
+    "id": "s8",
+    "narration": "Next time you watch a match, keep an eye on the cards. One red card can change tactics, wear a team out and decide the result.",
+    "onScreenText": "Cards change games",
+    "visual": {
+     "type": "kinetic",
+     "lines": [
+      "Watch the cards",
+      "One red can decide it"
+     ]
+    }
+   },
+   {
+    "id": "s9",
+    "narration": "Quick recap: a red card sends a player off with no replacement. Ready to test yourself?",
+    "visual": {
+     "type": "quiz"
+    }
+   }
+  ],
+  "quiz": {
+   "question": "A player who already has a yellow card commits another foul and gets a second yellow. What happens?",
+   "options": [
+    "It becomes a red card and he is sent off",
+    "Nothing, because yellow cards reset at half-time",
+    "He must be swapped for a substitute",
+    "The other team gets an automatic penalty"
+   ],
+   "answerIndex": 0,
+   "explanation": "Two yellow cards in one match add up to a red card, and a sent-off player can't be replaced."
+  },
+  "takeaway": "A red card sends a player off with no replacement, so their team plays the rest of the match a player short."
+ },
+ "media": [
+  {
+   "audio": "",
+   "durationSec": 6
+  },
+  {
+   "audio": "",
+   "durationSec": 6
+  },
+  {
+   "audio": "",
+   "durationSec": 6
+  },
+  {
+   "audio": "",
+   "durationSec": 6
+  },
+  {
+   "audio": "",
+   "durationSec": 6
+  },
+  {
+   "audio": "",
+   "durationSec": 6
+  },
+  {
+   "audio": "",
+   "durationSec": 6
+  },
+  {
+   "audio": "",
+   "durationSec": 6
+  },
+  {
+   "audio": "",
+   "durationSec": 6
+  }
+ ],
+ "data": {}
+}

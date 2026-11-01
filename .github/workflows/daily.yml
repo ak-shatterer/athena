@@ -1,0 +1,82 @@
+name: Athena daily
+
+on:
+  schedule:
+    - cron: '30 23 * * *' # 05:00 IST
+  workflow_dispatch:
+
+concurrency:
+  group: athena-daily
+  cancel-in-progress: false
+
+env:
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  DAILY_TOKEN_BUDGET: ${{ vars.DAILY_TOKEN_BUDGET || '400000' }}
+  FOOTBALL_DATA_KEY: ${{ secrets.FOOTBALL_DATA_KEY }}
+  STORAGE_DRIVER: ${{ vars.STORAGE_DRIVER || 'supabase' }}
+  RETENTION_DAYS: ${{ vars.RETENTION_DAYS || '7' }}
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+  SUPABASE_BUCKET: ${{ vars.SUPABASE_BUCKET || 'videos' }}
+  R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+  R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+  R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+  R2_BUCKET: ${{ vars.R2_BUCKET }}
+  R2_PUBLIC_URL: ${{ vars.R2_PUBLIC_URL }}
+  ATHENA_MODEL_CACHE: /home/runner/.cache/athena/models
+  TZ: Asia/Kolkata # lesson dates follow your local day
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      lessons: ${{ steps.count.outputs.lessons }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm pipeline ingest
+      - run: pnpm pipeline rank
+      # Lesson writing is the only paid step; without a key the run stops after ranking.
+      - if: env.ANTHROPIC_API_KEY != ''
+        run: pnpm pipeline plan
+      - if: env.ANTHROPIC_API_KEY != ''
+        run: pnpm pipeline write
+      - if: env.ANTHROPIC_API_KEY == ''
+        run: echo "::notice::ANTHROPIC_API_KEY not set — skipped plan/write, so no new lessons today."
+      - id: count
+        run: pnpm pipeline count --status scripted --output lessons
+
+  render:
+    needs: prepare
+    if: needs.prepare.outputs.lessons != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix: { shard: [0, 1, 2, 3] }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      # Headless Chrome libraries, plus a colour emoji font for category labels.
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-color-emoji libnss3 libatk-bridge2.0-0 libgbm1 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libcups2 libasound2t64
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/cache@v4
+        with:
+          path: /home/runner/.cache/athena/models
+          key: kokoro-82m-q8-v1
+      - uses: actions/cache@v4
+        with:
+          path: apps/pipeline/node_modules/.remotion
+          key: remotion-browser-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm pipeline voice --shard ${{ matrix.shard }}/4
+      - run: pnpm pipeline render --shard ${{ matrix.shard }}/4
+      - run: pnpm pipeline publish --shard ${{ matrix.shard }}/4

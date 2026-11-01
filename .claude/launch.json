@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "athena-web",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "pnpm@9.15.0", "--filter", "@athena/web", "dev"],
+      "port": 3030
+    }
+  ]
+}

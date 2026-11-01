@@ -1,0 +1,23 @@
+{
+  "name": "@athena/pipeline",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "cli": "tsx --env-file-if-exists=../../.env src/cli.ts",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
+    "@athena/config": "workspace:*",
+    "@athena/db": "workspace:*",
+    "@athena/llm": "workspace:*",
+    "@athena/shared": "workspace:*",
+    "@athena/storage": "workspace:*",
+    "@athena/tts": "workspace:^",
+    "@athena/video": "workspace:^",
+    "@remotion/bundler": "4.0.539",
+    "@remotion/renderer": "4.0.539",
+    "rss-parser": "^3.13.0",
+    "zod": "^4"
+  }
+}

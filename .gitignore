@@ -1,0 +1,12 @@
+node_modules
+.env
+.env.local
+dist
+.next
+.turbo
+out/
+*.mp4
+*.wav
+.data
+*.tsbuildinfo
+next-env.d.ts

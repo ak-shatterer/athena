@@ -1,0 +1,17 @@
+{
+  "name": "@athena/llm",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
+    "@athena/config": "workspace:*",
+    "@athena/shared": "workspace:*",
+    "zod": "^4.5.4"
+  }
+}
