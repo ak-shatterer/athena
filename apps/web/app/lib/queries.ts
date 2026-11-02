@@ -11,6 +11,7 @@ export interface FeedItem {
   lessonId: string;
   date: string;
   category: string;
+  kind: Lesson['kind'];
   title: string;
   concept: string;
   takeaway: string;
@@ -59,6 +60,7 @@ export async function getFeed(only?: string | string[]): Promise<FeedItem[]> {
       lessonId: lesson.id,
       date: lesson.date,
       category: lesson.category,
+      kind: lesson.kind,
       title: lesson.script!.title,
       concept: lesson.script!.concept.name,
       takeaway: lesson.script!.takeaway,

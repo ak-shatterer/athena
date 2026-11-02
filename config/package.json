@@ -2,6 +2,6 @@
   "name": "@athena/config",
   "private": true,
   "type": "module",
-  "exports": { "./categories": "./categories.ts", "./models": "./models.ts", "./prompts": "./prompts.ts" },
+  "exports": { "./categories": "./categories.ts", "./models": "./models.ts", "./prompts": "./prompts.ts", "./curriculum": "./curriculum.ts" },
   "scripts": { "typecheck": "tsc -p ." }
 }

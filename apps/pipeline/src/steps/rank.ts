@@ -15,6 +15,7 @@ export async function rank(args: Record<string, string>) {
   const since = new Date(Date.now() - WINDOW_HOURS * 3600_000);
 
   for (const category of selectCategories(args.category)) {
+    if (category.sources.length === 0) continue; // book-only category
     await clearUnusedStories(db, date, category.id);
 
     const rows = (

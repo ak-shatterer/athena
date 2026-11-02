@@ -89,7 +89,7 @@ export function VideoCard(p: { item: FeedItem; muted: boolean; setMuted: (m: boo
           <div className="h-full" style={{ width: `${progress * 100}%`, background: category?.color ?? '#fff' }} />
         </div>
         <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold" style={{ background: `${category?.color}40` }}>
-          {category?.emoji} {item.concept}
+          {item.kind === 'concept' ? '📚' : category?.emoji} {item.concept}
         </div>
         <h2 className="mt-1 truncate text-base font-extrabold">{item.title}</h2>
         <div className="mt-2 flex justify-between">

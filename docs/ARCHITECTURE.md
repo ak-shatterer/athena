@@ -1,7 +1,7 @@
 # Athena: a daily AI learning assistant that makes short videos
 
 ## Context
-You want a personal learning feed, not a news feed. Every day Athena collects the top stories in the categories you pick and turns each one into a short vertical video (60–120s) with illustrations, on-screen text and a narrator. Each video **teaches the underlying concept from zero first** ("What is a rate cut?") and **then connects it to today's news** ("…which is why the Fed's move yesterday matters"). You scroll through them in a web app and choose categories. Over time Athena remembers which concepts you already know, so it moves on to harder material, quizzes you, and brings back older ideas for review.
+You want a personal learning feed, not a news feed. Every day Athena collects the top stories in the categories you pick and turns each one into a short vertical video (60–120s) with illustrations, on-screen text and a narrator. Each video **teaches the underlying concept at your level first** ("What is a rate cut?") and **then connects it to today's news** ("…which is why the Fed's move yesterday matters"). You scroll through them in a web app and choose categories. Over time Athena remembers which concepts you already know, so it moves on to harder material, quizzes you, and brings back older ideas for review.
 
 `/Users/akshatterer/athena` is empty. Your choices so far: **real MP4 files**, **free/local voice**, **cloud from day one**.
 

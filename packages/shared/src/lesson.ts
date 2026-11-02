@@ -2,6 +2,11 @@
 // the Remotion renderer. Everything the video shows comes from this JSON.
 import { z } from 'zod';
 
+// How much the viewer already knows. "intermediate" is the default: an
+// informed adult who doesn't need everyday terms defined.
+export const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
+export type Level = (typeof LEVELS)[number];
+
 const Icon = z.string().describe('Lucide icon name, e.g. "landmark"');
 
 export const Visual = z.discriminatedUnion('type', [
@@ -55,8 +60,8 @@ export const Lesson = z.object({
   date: z.string(),
   category: z.string(),
   title: z.string(),
-  level: z.enum(['beginner', 'intermediate']),
-  kind: z.enum(['daily', 'review', 'recap']).default('daily'),
+  level: z.enum(LEVELS),
+  kind: z.enum(['daily', 'concept', 'review', 'recap']).default('daily'),
   concept: Concept,
   story: z.object({
     headline: z.string(),
@@ -91,7 +96,6 @@ export const PlanResult = z.object({
     z.object({
       storyId: z.string().describe('The id shown next to the story, e.g. "s3"'),
       concept: Concept,
-      level: Lesson.shape.level,
       why: z.string(),
     }),
   ),

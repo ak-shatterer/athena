@@ -1,15 +1,16 @@
 'use server';
 import { revalidatePath } from 'next/cache';
 import { categoryById } from '@athena/config/categories';
-import { REVIEW_INTERVALS_DAYS } from '@athena/shared';
+import { LEVELS, REVIEW_INTERVALS_DAYS, type Level } from '@athena/shared';
 import { conceptMastery, eq, lessons, quizAttempts, sql, userPrefs, views } from '@athena/db';
 import { requireSession } from './guard';
 import { getDb } from './db';
 
-export async function savePrefs(categories: string[], level: 'beginner' | 'intermediate') {
+export async function savePrefs(categories: string[], level: Level) {
   await requireSession();
   const db = await getDb();
   const valid = categories.filter((c) => categoryById[c]);
+  if (!LEVELS.includes(level)) throw new Error('Unknown level');
   await db
     .insert(userPrefs)
     .values({ id: 1, categories: valid, level })

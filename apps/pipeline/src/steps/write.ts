@@ -1,5 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { categoryById } from '@athena/config/categories';
+import { ideaBySlug, type Idea } from '@athena/config/curriculum';
 import { llmPolicy } from '@athena/config/models';
 import { loadPrompt } from '@athena/config/prompts';
 import { batchJson, callJson, OfflinePendingError, type JsonCall } from '@athena/llm';
@@ -27,10 +28,21 @@ export async function write(args: Record<string, string>) {
   const calls: JsonCall<typeof LessonDraft>[] = [];
   const sourcesById = new Map<string, { title: string; url: string; publisher: string }[]>();
   for (const row of rows) {
+    const idea = row.lesson.kind === 'concept' ? ideaBySlug(row.lesson.category, row.concept.slug) : undefined;
+    if (idea || !row.story) {
+      if (!idea) {
+        await db.update(lessons).set({ status: 'failed', error: 'idea not found in curriculum' }).where(eq(lessons.id, row.lesson.id));
+        continue;
+      }
+      sourcesById.set(row.lesson.id, [bookSource(idea)]);
+      calls.push({ id: row.lesson.id, task: 'write', system, user: await bookPrompt(db, row, idea, date), schema: LessonDraft });
+      continue;
+    }
+    const story = row.story;
     const sources = await db
       .select({ title: articles.title, url: articles.url, publisher: articles.publisher, summary: articles.summary })
       .from(articles)
-      .where(eq(articles.storyId, row.story.id))
+      .where(eq(articles.storyId, story.id))
       .orderBy(desc(articles.publishedAt))
       .limit(MAX_SOURCES);
     sourcesById.set(row.lesson.id, sources.map(({ summary: _, ...s }) => s));
@@ -38,11 +50,12 @@ export async function write(args: Record<string, string>) {
       id: row.lesson.id,
       task: 'write',
       system,
-      user: await userPrompt(db, row, sources, date),
+      user: await newsPrompt(db, row, story, sources, date),
       schema: LessonDraft,
     });
   }
 
+  if (calls.length === 0) return;
   if (args['dry-run']) {
     const tokens = calls.reduce((s, c) => s + (c.system.length + c.user.length) / 4, 0);
     console.log(`${calls.length} lessons, ~${Math.round(tokens).toLocaleString()} input tokens.\n\n--- first prompt ---\n${calls[0].user}`);
@@ -74,22 +87,24 @@ async function plannedLessons(db: Db, date: string, category?: string) {
   return db
     .select({ lesson: lessons, story: stories, concept: concepts })
     .from(lessons)
-    .innerJoin(stories, eq(stories.id, lessons.storyId))
+    .leftJoin(stories, eq(stories.id, lessons.storyId))
     .innerJoin(concepts, eq(concepts.slug, lessons.conceptSlug))
     .where(
       and(eq(lessons.date, date), eq(lessons.status, 'planned'), category ? eq(lessons.category, category) : undefined),
     );
 }
 
-async function userPrompt(
+async function newsPrompt(
   db: Db,
-  { lesson, story, concept }: Row,
+  { lesson, concept }: Row,
+  story: typeof stories.$inferSelect,
   sources: { title: string; publisher: string; summary: string | null }[],
   date: string,
 ) {
   const category = categoryById[lesson.category];
   const learner = await learnerContext(db, lesson.category, date);
   return [
+    `Lesson type: NEWS`,
     `Category: ${category.name}. Visuals that work well here: ${category.preferredVisuals.join(', ')}.`,
     `Today is ${date}.`,
     `\nTeach this concept: ${concept.name} (slug: ${concept.slug})`,
@@ -105,6 +120,27 @@ async function userPrompt(
     .join('\n');
 }
 
+async function bookPrompt(db: Db, { lesson, concept }: Row, idea: Idea, date: string) {
+  const category = categoryById[lesson.category];
+  const learner = await learnerContext(db, lesson.category, date);
+  return [
+    `Lesson type: BOOK`,
+    `Category: ${category.name}. Visuals that work well here: ${category.preferredVisuals.join(', ')}.`,
+    `Today is ${date}.`,
+    `\nTeach this idea: ${concept.name} (slug: ${concept.slug})`,
+    `What it's about: ${idea.hint}`,
+    `From: "${idea.book.title}" by ${idea.book.author}`,
+    `Level: ${lesson.level}`,
+    `\nThe learner already knows:\n${learner.knownText}`,
+  ].join('\n');
+}
+
+// Books link to an Open Library search, so the source is real without guessing a URL.
+function bookSource(idea: Idea) {
+  const q = encodeURIComponent(`${idea.book.title} ${idea.book.author}`);
+  return { title: idea.book.title, url: `https://openlibrary.org/search?q=${q}`, publisher: idea.book.author };
+}
+
 async function save(db: Db, { lesson, concept }: Row, draft: LessonDraft | Error | undefined, sources: Lesson['story']['sources'], date: string) {
   const parsed =
     draft && !(draft instanceof Error)
@@ -113,9 +149,12 @@ async function save(db: Db, { lesson, concept }: Row, draft: LessonDraft | Error
           id: lesson.id,
           date,
           category: lesson.category,
-          kind: 'daily',
+          kind: lesson.kind,
           concept: { slug: concept.slug, name: concept.name, prerequisites: concept.prerequisites },
-          story: { ...draft.story, sources },
+          story:
+            lesson.kind === 'concept'
+              ? { headline: `${sources[0].title} — ${sources[0].publisher}`, summary: lesson.why ?? concept.name, sources }
+              : { ...draft.story, sources },
         })
       : undefined;
 

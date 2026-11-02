@@ -2,14 +2,15 @@
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Check } from 'lucide-react';
+import type { Level } from '@athena/shared';
 import { savePrefs } from '../lib/actions';
 
 interface Option { id: string; name: string; emoji: string; color: string; perDay: number }
-type Level = 'beginner' | 'intermediate';
 
 const LEVELS: { id: Level; label: string; hint: string }[] = [
-  { id: 'beginner', label: 'New to most of this', hint: 'Start every topic from zero' },
-  { id: 'intermediate', label: 'I know the basics', hint: 'Skip the very first steps' },
+  { id: 'beginner', label: 'New to most of this', hint: 'Define the jargon as we go' },
+  { id: 'intermediate', label: 'I follow the news', hint: 'Skip the basics, go into how things work' },
+  { id: 'advanced', label: 'I know these fields well', hint: 'Debates, second-order effects, edge cases' },
 ];
 
 export function TopicPicker({ options, initial, initialLevel }: { options: Option[]; initial: string[]; initialLevel: Level }) {
@@ -37,7 +38,7 @@ export function TopicPicker({ options, initial, initialLevel }: { options: Optio
     <main className="mx-auto min-h-dvh max-w-md px-5 pb-32 pt-[max(24px,env(safe-area-inset-top))]">
       <p className="text-sm font-extrabold tracking-[0.3em] text-white/60">ATHENA</p>
       <h1 className="mt-6 text-3xl font-extrabold leading-tight">What do you want to understand?</h1>
-      <p className="mt-2 text-white/60">Every morning Athena turns the top stories in these topics into short lessons that start from zero.</p>
+      <p className="mt-2 text-white/60">Every morning Athena explains the ideas behind the top stories in these topics, plus one big idea from a classic book.</p>
 
       <div className="mt-6 grid grid-cols-2 gap-3">
         {options.map((o) => {

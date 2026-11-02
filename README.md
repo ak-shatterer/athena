@@ -1,6 +1,6 @@
 # Athena
 
-Your daily AI learning assistant. Every morning Athena reads the top stories in the categories you follow, picks one concept per story, and turns it into a short vertical video that **teaches the idea from zero first, then connects it to today's news**. Scroll through them in the web app, take the quiz, ask follow-ups, and Athena remembers what you already know.
+Your daily AI learning assistant. Every morning Athena reads the top stories in the categories you follow, picks one concept per story, and turns it into a short vertical video that **explains the idea at your level, then connects it to today's news**. Alongside the news, each topic gets one lesson a day from a classic book (see `config/curriculum.ts`). Scroll through them in the web app, take the quiz, ask follow-ups, and Athena remembers what you already know.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full design and [docs/DEPLOY.md](docs/DEPLOY.md) to put it online for free.
 

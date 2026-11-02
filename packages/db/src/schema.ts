@@ -1,5 +1,5 @@
 import { pgTable, text, integer, real, boolean, timestamp, jsonb, date, uuid, uniqueIndex } from 'drizzle-orm/pg-core';
-import type { Lesson, LessonStatus } from '@athena/shared';
+import type { Lesson, LessonStatus, Level } from '@athena/shared';
 
 export const articles = pgTable(
   'articles',
@@ -40,11 +40,11 @@ export const lessons = pgTable('lessons', {
   id: uuid('id').primaryKey().defaultRandom(),
   date: date('date').notNull(),
   category: text('category').notNull(),
-  kind: text('kind').$type<'daily' | 'review' | 'recap'>().notNull().default('daily'),
+  kind: text('kind').$type<Lesson['kind']>().notNull().default('daily'),
   storyId: uuid('story_id').references(() => stories.id),
   conceptSlug: text('concept_slug').references(() => concepts.slug),
   status: text('status').$type<LessonStatus>().notNull().default('planned'),
-  level: text('level').$type<'beginner' | 'intermediate'>().notNull().default('beginner'),
+  level: text('level').$type<Level>().notNull().default('intermediate'),
   why: text('why'), // planner's reason for this pick
   script: jsonb('script').$type<Lesson>(),
   // Narration per scene: path under out/media/ and spoken length.
@@ -71,7 +71,7 @@ export const videos = pgTable('videos', {
 export const userPrefs = pgTable('user_prefs', {
   id: integer('id').primaryKey().default(1),
   categories: text('categories').array().notNull().default(['ai', 'stocks', 'football', 'politics']),
-  level: text('level').$type<'beginner' | 'intermediate'>().notNull().default('beginner'),
+  level: text('level').$type<Level>().notNull().default('intermediate'),
 });
 
 export const views = pgTable('views', {

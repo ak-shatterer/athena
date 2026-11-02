@@ -17,8 +17,8 @@ export interface Category {
   name: string;
   emoji: string;
   color: string; // accent used in video theme + UI chips
-  lessonsPerDay: number;
-  sources: Source[];
+  lessonsPerDay: number; // news lessons; categories in curriculum.ts also get one book lesson a day
+  sources: Source[]; // may be empty for book-only categories
   dataProviders?: DataProvider[];
   preferredVisuals: string[]; // hints for the lesson writer
 }
@@ -133,6 +133,38 @@ export const categories: Category[] = [
       { kind: 'rss', url: 'https://www.theguardian.com/environment/rss', publisher: 'The Guardian', weight: 0.7 },
     ],
     preferredVisuals: ['chart', 'map', 'flow'],
+  },
+  {
+    id: 'psychology',
+    name: 'Psychology',
+    emoji: '🧠',
+    color: '#9333EA',
+    lessonsPerDay: 1,
+    sources: [
+      { kind: 'rss', url: 'https://www.sciencedaily.com/rss/mind_brain/psychology.xml', publisher: 'ScienceDaily', weight: 0.7 },
+      { kind: 'rss', url: 'https://www.theguardian.com/science/psychology/rss', publisher: 'The Guardian', weight: 0.8 },
+    ],
+    preferredVisuals: ['analogy', 'flow', 'kinetic'],
+  },
+  {
+    id: 'wealth',
+    name: 'Wealth Building',
+    emoji: '🏦',
+    color: '#0D9488',
+    lessonsPerDay: 1,
+    sources: [{ kind: 'rss', url: 'https://www.theguardian.com/money/rss', publisher: 'The Guardian', weight: 0.7 }],
+    dataProviders: ['yahoo', 'fred'],
+    preferredVisuals: ['chart', 'analogy', 'flow'],
+  },
+  {
+    id: 'trading',
+    name: 'Trading',
+    emoji: '💹',
+    color: '#EA580C',
+    lessonsPerDay: 0, // book lessons only; market news is covered by Stocks & Markets
+    sources: [],
+    dataProviders: ['yahoo'],
+    preferredVisuals: ['chart', 'flow', 'analogy'],
   },
 ];
 

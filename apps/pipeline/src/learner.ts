@@ -22,7 +22,7 @@ export async function learnerContext(db: Db, category: string, date: string) {
     recentSlugs: new Set(recent.map((r) => r.slug).filter((s): s is string => !!s)),
     knownText: known.length
       ? known.map((k) => `- ${k.slug} (${k.name}), mastery ${k.level}`).join('\n')
-      : '(nothing yet — assume a complete beginner)',
+      : '(nothing tracked yet — go by the learner level)',
     recentText: recent.length ? recent.map((r) => `- ${r.slug}`).join('\n') : '(none)',
   };
 }
